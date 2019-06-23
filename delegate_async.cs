@@ -25,16 +25,16 @@ namespace _2306_
             object o1 = func.DynamicInvoke(); // blocking
             Console.WriteLine(o1);
 
-            //IAsyncResult async = func.BeginInvoke((IAsyncResult ar) =>
-            //{
-            //    Console.WriteLine("after..........");
+            IAsyncResult async2 = func.BeginInvoke((IAsyncResult ar) =>
+            {
+                Console.WriteLine("after..........");
 
-            //    Console.WriteLine(ar.AsyncState); // this is the "hello" parameter
+                Console.WriteLine(ar.AsyncState); // this is the "hello" parameter
 
-            //    int res = func.EndInvoke(ar);
-            //    Console.WriteLine("what was the result? " + res);
+                int res = func.EndInvoke(ar);
+                Console.WriteLine("what was the result? " + res);
 
-            //}, "hello");
+            }, "hello");
 
             IAsyncResult async = func.BeginInvoke(MyCallback, func);
 
@@ -49,7 +49,8 @@ namespace _2306_
 
         private static void MyCallback(IAsyncResult ar)
         {
-            Console.WriteLine((Func<int>)ar.AsyncState).EndInvoke(ar));
+            Func<int> func = ar.AsyncState as Func<int>;
+            Console.WriteLine(func.EndInvoke(ar));
         }
     }
 }
