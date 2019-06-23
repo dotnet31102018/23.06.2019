@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,19 +25,31 @@ namespace _2306_
             object o1 = func.DynamicInvoke(); // blocking
             Console.WriteLine(o1);
 
-            IAsyncResult async = func.BeginInvoke((IAsyncResult ar) =>
-            {
-                Console.WriteLine("after..........");
+            //IAsyncResult async = func.BeginInvoke((IAsyncResult ar) =>
+            //{
+            //    Console.WriteLine("after..........");
 
-                Console.WriteLine(ar.AsyncState); // this is the "hello" parameter
+            //    Console.WriteLine(ar.AsyncState); // this is the "hello" parameter
 
-                int res = func.EndInvoke(ar);
-                Console.WriteLine("what was the result? " + res);
+            //    int res = func.EndInvoke(ar);
+            //    Console.WriteLine("what was the result? " + res);
 
-            }, "hello");
+            //}, "hello");
+
+            IAsyncResult async = func.BeginInvoke(MyCallback, func);
 
             int result = func.EndInvoke(async);
             Console.WriteLine("what was the result? " + result);
+
+            foreach(Func<int> method in  func.GetInvocationList())
+            {
+                method.BeginInvoke(null, null);
+            }
+        }
+
+        private static void MyCallback(IAsyncResult ar)
+        {
+            Console.WriteLine((Func<int>)ar.AsyncState).EndInvoke(ar));
         }
     }
 }
